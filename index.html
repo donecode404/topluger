@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TOPLUGER</title>
+<!-- Folder layout: index file + /images (homebg.jpg, aboutbg.jpg, toppa1.jpg ... toppa20.jpg) -->
+<style>
+:root{--bg:#f6f4ef;--fg:#141414;--muted:#6b6b6b;--card:#fff;--line:#ddd8cc;--accent:#d4a017;--nav:#141414;--navfg:#f6f4ef}
+@media (prefers-color-scheme:dark){:root{--bg:#111;--fg:#f2efe8;--muted:#a09c92;--card:#1c1c1c;--line:#333;--nav:#000}}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:"Helvetica Neue",Arial,sans-serif;min-height:100vh;display:flex;flex-direction:column}
+main{flex:1}
+a{color:inherit}
+nav{display:flex;justify-content:space-between;align-items:center;padding:16px 28px;background:var(--nav);color:var(--navfg);position:sticky;top:0;z-index:20;height:56px}
+nav .brand{font-weight:900;letter-spacing:.18em;font-size:1.05rem;text-decoration:none;color:var(--navfg);cursor:pointer}
+nav ul{list-style:none;display:flex;gap:26px;margin:0;padding:0}
+nav ul a{color:var(--navfg);text-decoration:none;font-size:.9rem;letter-spacing:.08em;text-transform:uppercase;padding-bottom:4px;border-bottom:2px solid transparent}
+nav ul a.active,nav ul a:hover{border-color:var(--accent)}
+.badge{background:var(--accent);color:#000;border-radius:99px;font-size:.7rem;padding:1px 7px;margin-left:4px;font-weight:700}
+section.page{display:none}
+section.page.show{display:block}
+
+/* Home */
+.hero{min-height:calc(100vh - 56px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#fff;padding:24px;
+background:linear-gradient(rgba(0,0,0,.5),rgba(0,0,0,.5)),url("images/homebg.JPG") center/cover no-repeat,linear-gradient(135deg,#0c0c0c,#262626)}
+.logo{font-size:clamp(2.6rem,10vw,6.5rem);font-weight:900;letter-spacing:.12em;margin:0;line-height:1}
+.logo span{color:var(--accent)}
+.tag{margin:16px 0 34px;letter-spacing:.2em;text-transform:uppercase;font-size:.85rem;opacity:.9}
+.btns{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.btn{display:inline-block;padding:14px 38px;border:2px solid var(--accent);background:var(--accent);color:#000;font-weight:700;letter-spacing:.12em;text-transform:uppercase;text-decoration:none;cursor:pointer;font-size:.9rem;font-family:inherit}
+.btn.added{background:#2e9d4f;border-color:#2e9d4f;color:#fff}
+.btn.ghost{background:transparent;color:#fff}
+.btn{transition:background .2s,border-color .2s,color .2s}
+.btn:hover{opacity:.85}
+
+/* Brand showcase */
+.brands{overflow:hidden;background:var(--card);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:28px 0}
+.track{display:flex;width:max-content;animation:brandscroll 30s linear infinite;will-change:transform}
+.track img{width:120px;height:80px;object-fit:contain;margin-right:56px;flex:none}
+@keyframes brandscroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* showcase sits on the hero, below the buttons */
+.hero .brands{align-self:stretch;margin:48px -24px 0;border:0;padding:16px 0;background:rgba(255,255,255,.92)}
+
+/* Shop */
+.wrap{max-width:900px;margin:0 auto;padding:40px 20px 70px}
+h2.title{font-size:2rem;letter-spacing:.1em;text-transform:uppercase;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.item{background:var(--card);border:1px solid var(--line)}
+.item .img{aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;background:linear-gradient(160deg,#eee,#cfcabd);overflow:hidden}
+.item .img img{width:100%;height:100%;object-fit:cover}
+.item .img img.ph{width:78%;height:auto;object-fit:contain}
+.item .info{padding:14px 16px 18px}
+.item h3{margin:0 0 6px;font-size:1rem}
+.row{display:flex;justify-content:space-between;color:var(--muted);font-size:.9rem;margin-bottom:12px}
+.row b{color:var(--fg)}
+.item .btn{padding:10px 0;width:100%;text-align:center;font-size:.8rem}
+
+/* Cart */
+.cart{display:grid;grid-template-columns:1fr auto}
+.cart .l,.cart .r{padding:16px 0;border-bottom:1px solid var(--line);display:flex;align-items:center}
+.cart .l{gap:14px}
+.cart .l img{width:70px;height:70px;object-fit:cover;background:#ddd;border-radius:4px}
+.cart .r{justify-content:flex-end;font-weight:700;padding-left:40px}
+.qty button{width:26px;height:26px;border:1px solid var(--line);background:var(--card);color:var(--fg);cursor:pointer}
+.qty span{display:inline-block;min-width:28px;text-align:center}
+.rm{display:inline-flex;align-items:center;gap:5px;margin-left:12px;padding:4px 11px;border:1px solid var(--line);border-radius:99px;background:transparent;color:var(--muted);font-size:.75rem;font-family:inherit;cursor:pointer;transition:all .2s}
+.rm:hover{border-color:#c0392b;color:#c0392b;background:rgba(192,57,43,.08)}
+.rm svg{width:13px;height:13px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cartpage{display:grid;grid-template-columns:1fr 320px;gap:40px;align-items:start}
+.summary{border:2px solid var(--fg);border-radius:8px;background:var(--card);padding:22px;position:sticky;top:76px}
+.totals{width:100%;text-align:right}
+.totals div{display:flex;justify-content:space-between;padding:6px 0;color:var(--muted)}
+.totals .grand{color:var(--fg);font-size:1.3rem;font-weight:800;border-top:1px solid var(--line);margin-top:8px;padding-top:12px}
+.totals .btn{margin-top:16px;width:100%;text-align:center}
+.btn.wa{background:#25d366;border-color:#25d366;color:#fff;display:flex;align-items:center;justify-content:center;gap:10px}
+.empty{color:var(--muted);padding:30px 0}
+
+/* About */
+.about{min-height:calc(100vh - 56px);display:flex;align-items:center;justify-content:center;padding:40px 20px;
+background:linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),url("images/aboutbg.JPG") center/cover no-repeat,linear-gradient(160deg,#1a1a1a,#3b3b3b);color:#fff}
+.about .txt{max-width:640px;text-align:center}
+.about h2{font-size:2.4rem;margin:0 0 8px;letter-spacing:.1em}
+.about h4{margin:0 0 22px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase}
+.about p{line-height:1.7;color:#ece8de}
+.about .sig{font-weight:700;margin-top:10px}
+
+/* Map */
+.mapsec{padding:44px 28px;border-top:1px solid var(--line)}
+.mapsec h2{margin:0 0 6px;font-size:1.6rem;letter-spacing:.1em;text-transform:uppercase}
+.mapsec p{margin:0 0 18px;color:var(--muted);font-size:.9rem}
+.mapsec p a{color:var(--accent)}
+.mapsec iframe{display:block;width:100%;height:380px;border:0;border-radius:8px}
+
+/* Footer */
+footer{background:var(--nav);color:var(--navfg);padding:48px 28px 20px}
+.fcols{margin:0;display:grid;grid-template-columns:repeat(4,1fr);gap:30px}
+footer h5{margin:0 0 14px;font-size:.85rem;letter-spacing:.15em;text-transform:uppercase;color:var(--accent)}
+footer ul{list-style:none;margin:0;padding:0}
+footer li{margin-bottom:9px}
+footer li a,footer li span{color:var(--navfg);opacity:.85;text-decoration:none;font-size:.9rem}
+footer li a:hover{opacity:1;text-decoration:underline}
+.fbottom{margin:34px 0 0;border-top:1px solid rgba(255,255,255,.2);padding-top:18px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.fbottom p{margin:0;font-size:.8rem;opacity:.8}
+.social{display:flex;gap:14px}
+.social a{display:flex;width:34px;height:34px;border:1px solid rgba(255,255,255,.35);border-radius:50%;align-items:center;justify-content:center;color:var(--navfg)}
+.social a:hover{background:var(--accent);color:#000;border-color:var(--accent)}
+.social svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+@media(max-width:700px){.brands{padding:20px 0}.track img{width:90px;height:60px;margin-right:36px}.cartpage{grid-template-columns:1fr;gap:20px}.summary{position:static}nav{padding:12px 16px}nav ul{gap:14px}nav ul a{font-size:.72rem}nav .brand{font-size:.9rem}.grid{gap:12px}.fcols{grid-template-columns:repeat(2,1fr)}.fbottom{flex-direction:column-reverse;align-items:flex-start}.about h2{font-size:1.8rem}}
+</style>
+</head>
+<body>
+<nav>
+  <a class="brand" href="#home">TOPLUGER</a>
+  <ul>
+    <li><a href="#home" data-p="home">Home</a></li>
+    <li><a href="#shop" data-p="shop">Shop</a></li>
+    <li><a href="#cart" data-p="cart">Cart<span class="badge" id="count">0</span></a></li>
+    <li><a href="#about" data-p="about">About</a></li>
+  </ul>
+</nav>
+
+<main>
+<section class="page" id="home">
+  <div class="hero">
+    <h1 class="logo">TOP<span>LUGER</span></h1>
+    <p class="tag">Elevate Your Identity</p>
+    <div class="btns">
+      <a class="btn" href="#shop">Shop</a>
+      <a class="btn ghost" href="#about">About</a>
+    </div>
+    <div class="brands" aria-label="Brands"><div class="track" id="brandTrack"></div></div>
+  </div>
+</section>
+
+<section class="page" id="shop">
+  <div class="wrap">
+    <h2 class="title">SHOWROOM</h2>
+    <div class="grid" id="products"></div>
+  </div>
+</section>
+
+<section class="page" id="cart">
+  <div class="wrap">
+    <h2 class="title">Your Cart</h2>
+    <div id="cartBody"></div>
+  </div>
+</section>
+
+<section class="page" id="about">
+  <div class="about">
+    <div class="txt">
+      <h2>TOPLUGER</h2>
+      <h4>More Than a Wear. It&rsquo;s an Identity.</h4>
+      <p>At TOPLUGER, we believe a Toppa is more than just an accessory; it&rsquo;s a statement of identity, confidence, and personal style.</p>
+      <p>We bring you original New Era toppa hats designed to redefine your look and complement your drip. Whether you&rsquo;re keeping it casual or making a bold statement, we&rsquo;ve got the perfect fit to complete your style.</p>
+      <p class="sig">Wear Your Identity. Own Your Style.</p>
+      <p>Tokyo</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<section class="mapsec">
+  <h2>Find Us</h2>
+  <p>Visit the showroom &middot; <a data-link="location" target="_blank" rel="noopener">Open in Google Maps</a></p>
+  <iframe title="Shop location" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=-1.3358919,36.677032&z=16&output=embed"></iframe>
+</section>
+
+<footer>
+  <div class="fcols">
+    <div>
+      <h5>Quick Links</h5>
+      <ul>
+        <li><a href="#home">Home</a></li>
+        <li><a href="#shop">Shop</a></li>
+        <li><a href="#cart">Cart</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Label</h5>
+      <ul>
+        <li><span>MLB</span></li>
+        <li><span>NBA</span></li>
+        <li><span>NFL</span></li>
+        <li><span>NHL</span></li>
+        <li><span>New Era</span></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Brands</h5>
+      <ul>
+        <li><a data-own="earlybad">Earlybad Records</a></li>
+        <li><a data-own="lumbu">Lumbu Stores</a></li>
+        <li><a data-own="display">111Display</a></li>
+      </ul>
+    </div>
+    <div>
+      <h5>Contact</h5>
+      <ul>
+        <li><a data-link="instagram" target="_blank" rel="noopener">Instagram</a></li>
+        <li><a data-link="tiktok" target="_blank" rel="noopener">TikTok</a></li>
+        <li><a data-link="facebook" target="_blank" rel="noopener">Facebook</a></li>
+        <li><a data-link="whatsapp" target="_blank" rel="noopener">WhatsApp</a></li>
+        <li><a data-link="email">Email</a></li>
+        <li><a data-link="location" target="_blank" rel="noopener">Location</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="fbottom">
+    <p>&copy; 2026 Tokyo. All rights reserved.</p>
+    <div class="social">
+      <a data-link="instagram" target="_blank" rel="noopener" aria-label="Instagram"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".6"/></svg></a>
+      <a data-link="tiktok" target="_blank" rel="noopener" aria-label="TikTok"><svg viewBox="0 0 24 24"><path d="M14 3v12.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.4 2.6 2.1 4.2 5 4.5"/></svg></a>
+      <a data-link="facebook" target="_blank" rel="noopener" aria-label="Facebook"><svg viewBox="0 0 24 24"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8.5c0-.3.2-.5.5-.5z"/></svg></a>
+      <a data-link="whatsapp" target="_blank" rel="noopener" aria-label="WhatsApp"><svg viewBox="0 0 24 24"><path d="M3 21l1.6-4.6A8.5 8.5 0 1 1 8 19.6z"/><path d="M9 8.5c0 3 3 6 6 6l1.2-1.4-2-1-1 .6c-.8-.4-1.6-1.2-2-2l.6-1-1-2z"/></svg></a>
+      <a data-link="location" target="_blank" rel="noopener" aria-label="Location"><svg viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.800 12 21 12 21z"/><circle cx="12" cy="9.500" r="2.500"/></svg></a>
+      <a data-link="email" aria-label="Email"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/></svg></a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ---------- SETTINGS: edit these ---------- */
+const CURRENCY  = "KSh ";
+const WHATSAPP  = "254796357969";               // your number, country code first, no + or spaces
+const LINKS = {
+  instagram: "https://instagram.com/mtoky03",           // replace with your profile links
+  tiktok:    "https://www.tiktok.com/@mtokyo3",
+  facebook:  "https://facebook.com/",
+  email:     "mailto:tobilente@gmail.com",
+  location:  "https://maps.app.goo.gl/W9zpPsK35kVoG83y9"
+};
+const BRANDS = [                                  // showcase row + footer; images live in /images
+  {key:"mlb", name:"MLB", img:"images/mlb.jpg", url:"https://www.mlb.com"},
+  {key:"nba", name:"NBA", img:"images/nba.jpg", url:"https://www.nba.com"},
+  {key:"nfl", name:"NFL", img:"images/nfl.jpg", url:"https://www.nfl.com"},
+  {key:"nhl", name:"NHL", img:"images/nhl.jpg", url:"https://www.nhl.com"},
+  {key:"newera", name:"New Era", img:"images/newera.jpg", url:"https://www.neweracap.com"}
+];
+const OWN_BRANDS = { earlybad:"#", lumbu:"#", display:"#" };   // footer Brands column: replace with your links
+/* ------------------------------------------ */
+
+const DATA = [
+  ["Black","#151515",1500],["Navy","#1c2f5a",1500],["Red","#b3202e",1500],["White","#f1efe9",1500],
+  ["Gold","#c9962a",1500],["Olive","#5b6b3a",1500],["Grey","#7a7a7a",1500],["Royal Blue","#2457c5",1500],
+  ["Black","#1a1a1a",1500],["Green","#1f7a3d",1500],["Black","#0d0d0d",1500],["White","#ece9e0",1500],
+  ["Khaki","#a89968",1500],["Black","#232323",1500],["Orange","#e0701f",1500],
+];
+const PRODUCTS = DATA.map((d,i)=>({id:i+1,name:"toppa"+(i+1),color:d[0],hex:d[1],price:d[2],img:"images/toppa"+(i+1)+".JPG"}));
+
+/* placeholder shown only when images/toppaN.jpg is missing */
+function placeholder(hex){
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150">
+  <ellipse cx="100" cy="122" rx="92" ry="12" fill="rgba(0,0,0,.2)"/>
+  <path d="M30 100 C28 40 70 18 100 18 C132 18 172 40 170 100 Z" fill="${hex}" stroke="rgba(0,0,0,.35)" stroke-width="2"/>
+  <path d="M26 100 C80 92 140 92 174 100 C192 104 196 116 170 118 C120 124 60 118 28 112 C16 108 18 102 26 100 Z" fill="${hex}" stroke="rgba(0,0,0,.4)" stroke-width="2"/>
+  <text x="100" y="144" text-anchor="middle" font-family="Arial" font-size="11" fill="#555">image coming soon</text>
+  </svg>`;
+  return "data:image/svg+xml;utf8," + encodeURIComponent(svg);
+}
+function pimg(p){
+  return `<img src="${p.img}" alt="${p.name}" onerror="this.onerror=null;this.className='ph';this.src=placeholder('${p.hex}')">`;
+}
+
+let cart = [];
+try { cart = JSON.parse(localStorage.getItem("tp_cart") || "[]"); } catch(e) { cart = []; }
+function save(){ try { localStorage.setItem("tp_cart", JSON.stringify(cart)); } catch(e){} }
+const money = n => CURRENCY + n.toLocaleString("en-KE");
+
+function renderShop(){
+  document.getElementById("products").innerHTML = PRODUCTS.map(p => `
+    <div class="item">
+      <div class="img">${pimg(p)}</div>
+      <div class="info">
+        <h3>${p.name}</h3>
+        <div class="row"><span>Color: <b>${p.color}</b></span><b>${money(p.price)}</b></div>
+        <button class="btn" data-id="${p.id}" onclick="add(${p.id})">Add to cart</button>
+      </div>
+    </div>`).join("");
+}
+function add(id){
+  if(cart.some(c => c.id === id)) return;   // already added: change quantity in the cart
+  cart.push({id, qty:1});
+  save(); updateCount();
+}
+function syncButtons(){
+  document.querySelectorAll("#products .btn[data-id]").forEach(b=>{
+    const on = cart.some(c => c.id === +b.dataset.id);
+    b.classList.toggle("added", on);
+    b.textContent = on ? "Added" : "Add to cart";
+  });
+}
+function change(id, d){
+  const f = cart.find(c => c.id === id);
+  if(!f) return;
+  f.qty += d;
+  if(f.qty <= 0) cart = cart.filter(c => c.id !== id);
+  save(); renderCart(); updateCount();
+}
+function removeItem(id){ cart = cart.filter(c => c.id !== id); save(); renderCart(); updateCount(); }
+function updateCount(){ document.getElementById("count").textContent = cart.reduce((s,c)=>s+c.qty,0); syncButtons(); }
+function cartTotal(){ return cart.reduce((s,c)=>{ const p=PRODUCTS.find(x=>x.id===c.id); return s+(p?p.price*c.qty:0); },0); }
+
+function checkoutWhatsApp(){
+  if(!cart.length) return;
+  let msg = "Hello TOPLUGER, I would like to place an order:\n\n";
+  cart.forEach((c,i)=>{
+    const p = PRODUCTS.find(x=>x.id===c.id); if(!p) return;
+    msg += `${i+1}. ${p.name} (${p.color}) x${c.qty} - ${money(p.price*c.qty)}\n`;
+  });
+  msg += `\nTotal: ${money(cartTotal())}\n\nPlease confirm availability and delivery details. Thank you!`;
+  window.open("https://wa.me/" + WHATSAPP + "?text=" + encodeURIComponent(msg), "_blank");
+}
+
+const WA_ICON = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21l1.6-4.6A8.5 8.5 0 1 1 8 19.6z"/><path d="M9 8.5c0 3 3 6 6 6l1.2-1.4-2-1-1 .6c-.8-.4-1.6-1.2-2-2l.6-1-1-2z"/></svg>';
+
+function renderCart(){
+  const el = document.getElementById("cartBody");
+  if(!cart.length){ el.innerHTML = '<p class="empty">Your cart is empty. <a href="#shop">Go shop</a>.</p>'; return; }
+  const rows = cart.map(c => {
+    const p = PRODUCTS.find(x => x.id === c.id);
+    return `<div class="l">${pimg(p)}
+        <div><b>${p.name}</b><br><small>Color: ${p.color}</small><br>
+        <span class="qty"><button onclick="change(${p.id},-1)">&minus;</button><span>${c.qty}</span><button onclick="change(${p.id},1)">+</button></span>
+        <button class="rm" onclick="removeItem(${p.id})"><svg viewBox="0 0 24 24"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>Remove</button></div></div>
+      <div class="r">${money(p.price*c.qty)}</div>`;
+  }).join("");
+  const total = cartTotal();
+  el.innerHTML = `<div class="cartpage"><div class="cart">${rows}</div>
+    <aside class="summary"><div class="totals">
+      <div><span>Subtotal</span><span>${money(total)}</span></div>
+      <div class="grand"><span>Total</span><span>${money(total)}</span></div>
+      <button class="btn wa" onclick="checkoutWhatsApp()">${WA_ICON} Checkout via WhatsApp</button>
+    </div></aside></div>`;
+}
+
+function route(){
+  const h = (location.hash || "#home").slice(1);
+  const page = ["home","shop","cart","about"].includes(h) ? h : "home";
+  document.querySelectorAll("section.page").forEach(s => s.classList.toggle("show", s.id === page));
+  document.querySelectorAll("nav ul a").forEach(a => a.classList.toggle("active", a.dataset.p === page));
+  if(page === "cart") renderCart();
+  window.scrollTo(0,0);
+}
+
+/* footer links */
+document.querySelectorAll("[data-link]").forEach(a=>{
+  const k = a.dataset.link;
+  a.href = k === "whatsapp" ? "https://wa.me/" + WHATSAPP : LINKS[k];
+});
+document.querySelectorAll("[data-brand]").forEach(a=>{ a.href = BRANDS.find(b=>b.key===a.dataset.brand).url; });
+
+document.querySelectorAll("[data-own]").forEach(a=>{ a.href = OWN_BRANDS[a.dataset.own]; });
+
+/* brand showcase: one set repeated, then doubled so the -50% loop is seamless */
+const half = [].concat(BRANDS,BRANDS,BRANDS,BRANDS);
+document.getElementById("brandTrack").innerHTML = half.concat(half).map(b=>`<img src="${b.img}" alt="${b.name}">`).join("");
+
+renderShop(); updateCount();
+window.addEventListener("hashchange", route);
+route();
+</script>
+</body>
+</html>
